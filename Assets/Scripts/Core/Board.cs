@@ -10,10 +10,10 @@
 		// Piece code is defined as piecetype | colour code
 		public int[] Square;
 
-		public bool WhiteToMove;
-		public int ColourToMove;
-		public int OpponentColour;
-		public int ColourToMoveIndex;
+		public bool WhiteToMove; // 当前走棋方是否是白子
+		public int ColourToMove; // 走棋方颜色类型
+		public int OpponentColour; // 对手方颜色类型
+		public int ColourToMoveIndex; // 走棋方标识
 
 		// Bits 0-3 store white and black kingside/queenside castling legality
 		// Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
@@ -22,7 +22,7 @@
 		Stack<uint> gameStateHistory;
 		public uint currentGameState;
 
-		public int plyCount; // Total plies played in game
+		public int plyCount; // Total plies played in game 对弈的总步数
 		public int fiftyMoveCounter; // Num ply since last pawn move or capture
 
 		public ulong ZobristKey;
@@ -372,6 +372,7 @@
 			plyCount = 0;
 			fiftyMoveCounter = 0;
 
+            // List中要存两套，白子和黑子
 			knights = new PieceList[] { new PieceList (10), new PieceList (10) };
 			pawns = new PieceList[] { new PieceList (8), new PieceList (8) };
 			rooks = new PieceList[] { new PieceList (10), new PieceList (10) };

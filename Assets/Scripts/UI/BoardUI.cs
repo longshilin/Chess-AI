@@ -57,8 +57,9 @@ namespace Chess.Game {
 			ResetSquareColours ();
 		}
 
+        // 根据点击的位点坐标获取Coord坐标对象
 		public bool TryGetSquareUnderMouse (Vector2 mouseWorld, out Coord selectedCoord) {
-			int file = (int) (mouseWorld.x + 4);
+			int file = (int) (mouseWorld.x + 4); // 因为棋盘中心为坐标原点，所以序号和坐标之间相差4
 			int rank = (int) (mouseWorld.y + 4);
 			if (!whiteIsBottom) {
 				file = 7 - file;
@@ -188,6 +189,7 @@ namespace Chess.Game {
 			squareRenderers[square.fileIndex, square.rankIndex].material.color = (square.IsLightSquare ()) ? lightCol : darkCol;
 		}
 
+        // 从坐标对象获取实际的坐标位置
 		public Vector3 PositionFromCoord (int file, int rank, float depth = 0) {
 			if (whiteIsBottom) {
 				return new Vector3 (-3.5f + file, -3.5f + rank, depth);

@@ -3,6 +3,7 @@
 	using System.Collections;
 	using UnityEngine;
 
+    // UI时间计数组件
 	public class Clock : MonoBehaviour {
 
 		public TMPro.TMP_Text timerUI;

@@ -18,12 +18,14 @@
 		}
 	}
 
+    // todo
 	public void AddPieceAtSquare (int square) {
 		occupiedSquares[numPieces] = square;
 		map[square] = numPieces;
 		numPieces++;
 	}
 
+    // todo
 	public void RemovePieceAtSquare (int square) {
 		int pieceIndex = map[square]; // get the index of this element in the occupiedSquares array
 		occupiedSquares[pieceIndex] = occupiedSquares[numPieces - 1]; // move last element in array to the place of the removed element
@@ -31,6 +33,7 @@
 		numPieces--;
 	}
 
+    // todo
 	public void MovePiece (int startSquare, int targetSquare) {
 		int pieceIndex = map[startSquare]; // get the index of this element in the occupiedSquares array
 		occupiedSquares[pieceIndex] = targetSquare;

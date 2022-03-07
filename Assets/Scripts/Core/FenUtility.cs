@@ -1,5 +1,6 @@
 ﻿namespace Chess {
 	using System.Collections.Generic;
+    // 参考：https://www.chess.com/terms/fen-chess
 	public static class FenUtility {
 
 		static Dictionary<char, int> pieceTypeFromSymbol = new Dictionary<char, int> () {
@@ -17,6 +18,7 @@
 			int file = 0;
 			int rank = 7;
 
+            // 解析 “rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR” ：解析棋子布局 从上到下，从黑到白 排列
 			foreach (char symbol in sections[0]) {
 				if (symbol == '/') {
 					file = 0;
@@ -25,16 +27,18 @@
 					if (char.IsDigit (symbol)) {
 						file += (int) char.GetNumericValue (symbol);
 					} else {
-						int pieceColour = (char.IsUpper (symbol)) ? Piece.White : Piece.Black;
+						int pieceColour = (char.IsUpper (symbol)) ? Piece.White : Piece.Black; // 大写是白子，小写是黑子
 						int pieceType = pieceTypeFromSymbol[char.ToLower (symbol)];
-						loadedPositionInfo.squares[rank * 8 + file] = pieceType | pieceColour;
+						loadedPositionInfo.squares[rank * 8 + file] = pieceType | pieceColour; // 低三位是棋子类型，第4、5位是棋子颜色，类型和颜色取并集
 						file++;
 					}
 				}
 			}
 
+            // 解析 "w" ：白子先走
 			loadedPositionInfo.whiteToMove = (sections[1] == "w");
 
+            // 解析 “KQkq” ：王车易位规则 参考 https://support.chess.com/article/266-how-do-i-castle
 			string castlingRights = (sections.Length > 2) ? sections[2] : "KQkq";
 			loadedPositionInfo.whiteCastleKingside = castlingRights.Contains ("K");
 			loadedPositionInfo.whiteCastleQueenside = castlingRights.Contains ("Q");

@@ -31,6 +31,9 @@ namespace Chess.Game {
 			HandleInput ();
 		}
 
+        /// <summary>
+        /// 处理玩家UI点击输入
+        /// </summary>
 		void HandleInput () {
 			Vector2 mousePos = cam.ScreenToWorldPoint (Input.mousePosition);
 

@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 
 namespace Chess.Game {
+    /// <summary>
+    /// 棋子风格
+    /// </summary>
 	[CreateAssetMenu (menuName = "Theme/Pieces")]
 	public class PieceTheme : ScriptableObject {
 
 		public PieceSprites whitePieces;
 		public PieceSprites blackPieces;
 
+        /// <summary>
+        /// 获取棋子对应图片
+        /// </summary>
 		public Sprite GetPieceSprite (int piece) {
 			PieceSprites pieceSprites = Piece.IsColour (piece, Piece.White) ? whitePieces : blackPieces;
 

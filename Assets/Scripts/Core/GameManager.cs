@@ -89,16 +89,28 @@ namespace Chess.Game {
 			NotifyPlayerToMove ();
 		}
 
+        /// <summary>
+        /// Human Play with AI
+        /// </summary>
+        /// <param name="humanPlaysWhite"></param>
 		public void NewGame (bool humanPlaysWhite) {
 			boardUI.SetPerspective (humanPlaysWhite);
 			NewGame ((humanPlaysWhite) ? PlayerType.Human : PlayerType.AI, (humanPlaysWhite) ? PlayerType.AI : PlayerType.Human);
 		}
 
+        /// <summary>
+        /// AI VS AI
+        /// </summary>
 		public void NewComputerVersusComputerGame () {
 			boardUI.SetPerspective (true);
 			NewGame (PlayerType.AI, PlayerType.AI);
 		}
 
+        /// <summary>
+        /// 新的一局开始
+        /// </summary>
+        /// <param name="whitePlayerType"></param>
+        /// <param name="blackPlayerType"></param>
 		void NewGame (PlayerType whitePlayerType, PlayerType blackPlayerType) {
 			gameMoves.Clear ();
 			if (loadCustomPosition) {

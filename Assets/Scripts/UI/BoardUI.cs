@@ -115,6 +115,9 @@ namespace Chess.Game {
 			SetSquareColour (BoardRepresentation.CoordFromIndex (move.TargetSquare), boardTheme.lightSquares.moveToHighlight, boardTheme.darkSquares.moveToHighlight);
 		}
 
+        /// <summary>
+        /// 创建棋盘UI
+        /// </summary>
 		void CreateBoardUI () {
 
 			Shader squareShader = Shader.Find ("Unlit/Color");

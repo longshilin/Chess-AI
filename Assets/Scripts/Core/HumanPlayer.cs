@@ -17,7 +17,7 @@ namespace Chess.Game {
 		BoardUI boardUI;
 		Camera cam;
 		Coord selectedPieceSquare;
-		Board board;
+		Board board; // 对战棋盘
 		public HumanPlayer (Board board) {
 			boardUI = GameObject.FindObjectOfType<BoardUI> ();
 			cam = Camera.main;
@@ -131,7 +131,7 @@ namespace Chess.Game {
 			MoveGenerator moveGenerator = new MoveGenerator ();
 			bool wantsKnightPromotion = Input.GetKey (KeyCode.LeftAlt);
 
-			var legalMoves = moveGenerator.GenerateMoves (board);
+			var legalMoves = moveGenerator.GenerateMoves (board); // 模拟生成走棋路径
 			for (int i = 0; i < legalMoves.Count; i++) {
 				var legalMove = legalMoves[i];
 

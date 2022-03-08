@@ -47,6 +47,8 @@
 		const uint whiteCastleMask = whiteCastleKingsideMask & whiteCastleQueensideMask;
 		const uint blackCastleMask = blackCastleKingsideMask & blackCastleQueensideMask;
 
+        // 获取每种类型的棋子列表，每个棋子对象有记录自身的坐标已以及类型等信息
+        // 定位到棋子列表是通过：棋子类型以及所在的rankIndex
 		PieceList GetPieceList (int pieceType, int colourIndex) {
 			return allPieceLists[colourIndex * 8 + pieceType];
 		}
@@ -373,29 +375,29 @@
 			fiftyMoveCounter = 0;
 
             // List中要存两套，白子和黑子
-			knights = new PieceList[] { new PieceList (10), new PieceList (10) };
-			pawns = new PieceList[] { new PieceList (8), new PieceList (8) };
-			rooks = new PieceList[] { new PieceList (10), new PieceList (10) };
-			bishops = new PieceList[] { new PieceList (10), new PieceList (10) };
-			queens = new PieceList[] { new PieceList (9), new PieceList (9) };
+			knights = new PieceList[] { new PieceList (10), new PieceList (10) }; // 王 ? 为何长度是10
+			pawns = new PieceList[] { new PieceList (8), new PieceList (8) }; // 兵 8
+			rooks = new PieceList[] { new PieceList (10), new PieceList (10) }; // 车 2+8
+			bishops = new PieceList[] { new PieceList (10), new PieceList (10) }; // 相 2+8
+			queens = new PieceList[] { new PieceList (9), new PieceList (9) }; // 皇后 1+8
 			PieceList emptyList = new PieceList (0);
 			allPieceLists = new PieceList[] {
 				emptyList,
 				emptyList,
-				pawns[WhiteIndex],
-				knights[WhiteIndex],
+				pawns[WhiteIndex], // 2 0010
+				knights[WhiteIndex], // 3 0011
 				emptyList,
-				bishops[WhiteIndex],
-				rooks[WhiteIndex],
-				queens[WhiteIndex],
+				bishops[WhiteIndex], // 5 0101
+				rooks[WhiteIndex], // 6 0110
+				queens[WhiteIndex], // 7 0111
 				emptyList,
 				emptyList,
-				pawns[BlackIndex],
-				knights[BlackIndex],
+				pawns[BlackIndex], // 10 1010
+				knights[BlackIndex], // 11 1011
 				emptyList,
-				bishops[BlackIndex],
-				rooks[BlackIndex],
-				queens[BlackIndex],
+				bishops[BlackIndex], // 13 1101
+				rooks[BlackIndex], // 14 1110
+				queens[BlackIndex], // 15 1111
 			};
 		}
 	}

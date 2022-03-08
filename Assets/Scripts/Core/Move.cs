@@ -12,17 +12,18 @@ namespace Chess {
 
 		public readonly struct Flag {
 			public const int None = 0;
-			public const int EnPassantCapture = 1;
-			public const int Castling = 2;
-			public const int PromoteToQueen = 3;
+			public const int EnPassantCapture = 1; // 吃过路兵 https://support.chess.com/article/683-what-is-en-passant
+			public const int Castling = 2; // 王车易位 https://support.chess.com/article/266-how-do-i-castle
+			public const int PromoteToQueen = 3; // 兵的升变
 			public const int PromoteToKnight = 4;
 			public const int PromoteToRook = 5;
 			public const int PromoteToBishop = 6;
-			public const int PawnTwoForward = 7;
+			public const int PawnTwoForward = 7; // 标记兵是否走了两格
 		}
 
 		readonly ushort moveValue;
 
+        // todo ? 为什么要这么分 
 		const ushort startSquareMask = 0b0000000000111111;
 		const ushort targetSquareMask = 0b0000111111000000;
 		const ushort flagMask = 0b1111000000000000;
@@ -64,6 +65,7 @@ namespace Chess {
 			}
 		}
 
+        // 升变类型： 车  马  相  皇后
 		public int PromotionPieceType {
 			get {
 				switch (MoveFlag) {

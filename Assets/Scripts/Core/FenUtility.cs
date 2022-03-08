@@ -45,6 +45,7 @@
 			loadedPositionInfo.blackCastleKingside = castlingRights.Contains ("k");
 			loadedPositionInfo.blackCastleQueenside = castlingRights.Contains ("q");
 
+            // 吃过路兵规则
 			if (sections.Length > 3) {
 				string enPassantFileName = sections[3][0].ToString ();
 				if (BoardRepresentation.fileNames.Contains (enPassantFileName)) {

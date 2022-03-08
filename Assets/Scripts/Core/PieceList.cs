@@ -1,4 +1,7 @@
-﻿public class PieceList {
+﻿/// <summary>
+/// 棋盘上每种棋子有一个列表对象，用来记录棋盘上的棋子状态
+/// </summary>
+public class PieceList {
 
 	// Indices of squares occupied by given piece type (only elements up to Count are valid, the rest are unused/garbage)
 	public int[] occupiedSquares;
@@ -18,14 +21,14 @@
 		}
 	}
 
-    // todo
+    // 加入棋子
 	public void AddPieceAtSquare (int square) {
 		occupiedSquares[numPieces] = square;
 		map[square] = numPieces;
 		numPieces++;
 	}
 
-    // todo
+    // 移除棋子
 	public void RemovePieceAtSquare (int square) {
 		int pieceIndex = map[square]; // get the index of this element in the occupiedSquares array
 		occupiedSquares[pieceIndex] = occupiedSquares[numPieces - 1]; // move last element in array to the place of the removed element
@@ -33,7 +36,7 @@
 		numPieces--;
 	}
 
-    // todo
+    // 移动棋子
 	public void MovePiece (int startSquare, int targetSquare) {
 		int pieceIndex = map[startSquare]; // get the index of this element in the occupiedSquares array
 		occupiedSquares[pieceIndex] = targetSquare;

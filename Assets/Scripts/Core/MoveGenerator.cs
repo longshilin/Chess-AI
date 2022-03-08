@@ -34,10 +34,11 @@
 
 		// Generates list of legal moves in current position.
 		// Quiet moves (non captures) can optionally be excluded. This is used in quiescence search.
+        // 走棋路径生成
 		public List<Move> GenerateMoves (Board board, bool includeQuietMoves = true) {
 			this.board = board;
 			genQuiets = includeQuietMoves;
-			Init ();
+			Init (); // 生成器参数初始化
 
 			CalculateAttackData ();
 			GenerateKingMoves ();
@@ -338,10 +339,11 @@
 			}
 		}
 
+        // 计算可滑动的攻击Map
 		void GenSlidingAttackMap () {
 			opponentSlidingAttackMap = 0;
 
-			PieceList enemyRooks = board.rooks[opponentColourIndex];
+			PieceList enemyRooks = board.rooks[opponentColourIndex]; // 获取对手的棋子列表数据
 			for (int i = 0; i < enemyRooks.Count; i++) {
 				UpdateSlidingAttackPiece (enemyRooks[i], 0, 4);
 			}
@@ -374,8 +376,9 @@
 			}
 		}
 
+        // 计算走棋攻击数据
 		void CalculateAttackData () {
-			GenSlidingAttackMap ();
+			GenSlidingAttackMap (); // 生成滑行攻击地图
 			// Search squares in all directions around friendly king for checks/pins by enemy sliding pieces (queen, rook, bishop)
 			int startDirIndex = 0;
 			int endDirIndex = 8;

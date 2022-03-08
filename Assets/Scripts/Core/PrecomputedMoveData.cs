@@ -2,42 +2,43 @@
 	using System.Collections.Generic;
 	using static System.Math;
 
+    // 预先计算的移动相关数据
 	public static class PrecomputedMoveData {
 		// First 4 are orthogonal, last 4 are diagonals (N, S, W, E, NW, SE, NE, SW)
 		public static readonly int[] directionOffsets = { 8, -8, -1, 1, 7, -7, 9, -9 };
 
-		// Stores number of moves available in each of the 8 directions for every square on the board
+		// Stores number of moves available in each of the 8 directions for every square on the board  存储棋盘上每个方块的 8 个方向中每个方向的可用移动次数
 		// Order of directions is: N, S, W, E, NW, SE, NE, SW
 		// So for example, if availableSquares[0][1] == 7...
 		// that means that there are 7 squares to the north of b1 (the square with index 1 in board array)
 		public static readonly int[][] numSquaresToEdge;
 
-		// Stores array of indices for each square a knight can land on from any square on the board
-		// So for example, knightMoves[0] is equal to {10, 17}, meaning a knight on a1 can jump to c2 and b3
+		// Stores array of indices for each square a knight can land on from any square on the board  存储某个Index的棋子可以行进的位置
+		// So for example, knightMoves[0] is equal to {10, 17}, meaning a knight on a1 can jump to c2 and b3  例如在Index为0(a1)的马，可以移动到Index为10(c2)和17(b3)的位置
 		public static readonly byte[][] knightMoves;
 		public static readonly byte[][] kingMoves;
 
-		// Pawn attack directions for white and black (NW, NE; SW SE)
+		// Pawn attack directions for white and black (NW, NE; SW SE)  兵攻击目录
 		public static readonly byte[][] pawnAttackDirections = {
 			new byte[] { 4, 6 },
 			new byte[] { 7, 5 }
 		};
 
-		public static readonly int[][] pawnAttacksWhite;
-		public static readonly int[][] pawnAttacksBlack;
-		public static readonly int[] directionLookup;
+		public static readonly int[][] pawnAttacksWhite; // 兵攻击白子
+		public static readonly int[][] pawnAttacksBlack; // 兵攻击黑子
+		public static readonly int[] directionLookup; // 方向查找
 
-		public static readonly ulong[] kingAttackBitboards;
+		public static readonly ulong[] kingAttackBitboards; // 存储king从当前点可走动的位置
 		public static readonly ulong[] knightAttackBitboards;
 		public static readonly ulong[][] pawnAttackBitboards;
 
-		public static readonly ulong[] rookMoves;
-		public static readonly ulong[] bishopMoves;
-		public static readonly ulong[] queenMoves;
+		public static readonly ulong[] rookMoves; // 车可行进的位置
+		public static readonly ulong[] bishopMoves; // 相行进的位置
+		public static readonly ulong[] queenMoves; // 皇后可行进的位置
 
-		// Aka manhattan distance (answers how many moves for a rook to get from square a to square b)
+		// Aka manhattan distance (answers how many moves for a rook to get from square a to square b)  曼哈顿距离 计算车从方块a到方块b的移动次数
 		public static int[, ] orthogonalDistance;
-		// Aka chebyshev distance (answers how many moves for a king to get from square a to square b)
+		// Aka chebyshev distance (answers how many moves for a king to get from square a to square b)  切比雪夫距离 计算国王从方块a到方块b的移动次数
 		public static int[, ] kingDistance;
 		public static int[] centreManhattanDistance;
 
@@ -62,7 +63,7 @@
 			bishopMoves = new ulong[64];
 			queenMoves = new ulong[64];
 
-			// Calculate knight jumps and available squares for each square on the board.
+			// Calculate knight jumps and available squares for each square on the board.  计算骑士可跳跃的棋盘格子序号。
 			// See comments by variable definitions for more info.
 			int[] allKnightJumps = { 15, 17, -17, -15, 10, -6, 6, -10 };
 			knightAttackBitboards = new ulong[64];
@@ -71,9 +72,11 @@
 
 			for (int squareIndex = 0; squareIndex < 64; squareIndex++) {
 
+                // 获取格子序号对应的格子坐标 比如序号8对应的坐标是(0,1)
 				int y = squareIndex / 8;
 				int x = squareIndex - y * 8;
 
+                // todo？ 这里分这个是干嘛？？
 				int north = 7 - y;
 				int south = y;
 				int west = x;

@@ -37,7 +37,7 @@ namespace Chess.Game {
 
 		public ulong zobristDebug;
 		public Board board { get; private set; }
-		Board searchBoard; // Duplicate version of board used for ai search
+		Board searchBoard; // Duplicate version of board used for ai search 用于AI搜索用的克隆棋盘
 
 		void Start () {
 			//Application.targetFrameRate = 60;
@@ -218,7 +218,7 @@ namespace Chess.Game {
 			MoveGenerator moveGenerator = new MoveGenerator ();
 			var moves = moveGenerator.GenerateMoves (board);
 
-			// Look for mate/stalemate
+			// Look for mate/stalemate  行棋的一方在未被将军的情况下无子可动（称为“逼和（stalemate）”）
 			if (moves.Count == 0) {
 				if (moveGenerator.InCheck ()) {
 					return (board.WhiteToMove) ? Result.WhiteIsMated : Result.BlackIsMated;
@@ -226,18 +226,18 @@ namespace Chess.Game {
 				return Result.Stalemate;
 			}
 
-			// Fifty move rule
+			// Fifty move rule 在连续的50个回合内，双方没有吃子也没有移动过兵。
 			if (board.fiftyMoveCounter >= 100) {
 				return Result.FiftyMoveRule;
 			}
 
-			// Threefold repetition
+			// Threefold repetition 下一步之前，同样的局面出现或即将出现三次或以上。
 			int repCount = board.RepetitionPositionHistory.Count ((x => x == board.ZobristKey));
 			if (repCount == 3) {
 				return Result.Repetition;
 			}
 
-			// Look for insufficient material (not all cases implemented yet)
+			// Look for insufficient material (not all cases implemented yet) 双方均没有足够的棋子在有限步数内将死对方。
 			int numPawns = board.pawns[Board.WhiteIndex].Count + board.pawns[Board.BlackIndex].Count;
 			int numRooks = board.rooks[Board.WhiteIndex].Count + board.rooks[Board.BlackIndex].Count;
 			int numQueens = board.queens[Board.WhiteIndex].Count + board.queens[Board.BlackIndex].Count;

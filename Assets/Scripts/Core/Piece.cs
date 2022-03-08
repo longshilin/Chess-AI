@@ -13,14 +13,13 @@
         public const int Queen = 7; //皇后         0111           “威力最强的棋子”，可横走、直走或斜走，移动步数不限，但不可转向或越过其他棋子。其吃子与走法相同。
 
 
+        public const int White = 8; //白子         01000
+        public const int Black = 16; //黑子        10000
 
-		public const int White = 8;//白子         01000
-		public const int Black = 16;//黑子        10000
-
-		const int typeMask = 0b00111;//棋子类型占位符(0~7 二进制的低三位可以表示)
-		const int blackMask = 0b10000;//黑子类型占位符
-		const int whiteMask = 0b01000;//白子类型占位符
-		const int colourMask = whiteMask | blackMask;//颜色类型占位符
+        const int typeMask = 0b00111; //棋子类型占位符(0~7 二进制的低三位可以表示)
+        const int blackMask = 0b10000; //黑子类型占位符
+        const int whiteMask = 0b01000; //白子类型占位符
+        const int colourMask = whiteMask | blackMask; //颜色类型占位符 0b11000
 
         /// <summary>
         /// 是否是同色棋子

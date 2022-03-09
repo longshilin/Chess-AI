@@ -12,11 +12,11 @@
 		// ---- Instance variables ----
 		List<Move> moves;
 		bool isWhiteToMove;
-		int friendlyColour;
-		int opponentColour;
-		int friendlyKingSquare;
-		int friendlyColourIndex;
-		int opponentColourIndex;
+		int friendlyColour; // 我方颜色
+		int opponentColour; // 对方颜色
+		int friendlyKingSquare; // 我方王的棋子Index
+		int friendlyColourIndex; // 我方棋子颜色Index
+		int opponentColourIndex; // 对方棋子颜色Index
 
 		bool inCheck;
 		bool inDoubleCheck;
@@ -40,7 +40,7 @@
 			genQuiets = includeQuietMoves;
 			Init (); // 生成器参数初始化
 
-			CalculateAttackData ();
+			CalculateAttackData (); // 计算对方棋子可以攻击到的所有位点数据，存在opponentAttackMap中 
 			GenerateKingMoves ();
 
 			// Only king moves are valid in a double check position, so can return early.
@@ -339,26 +339,29 @@
 			}
 		}
 
-        // 计算可滑动的攻击Map
+        // 计算对方车，皇后和相在各自吃对方第一个棋子之前，搜寻走到的格子位点，记录在opponentSlidingAttackMap中
 		void GenSlidingAttackMap () {
 			opponentSlidingAttackMap = 0;
 
 			PieceList enemyRooks = board.rooks[opponentColourIndex]; // 获取对手的棋子列表数据
 			for (int i = 0; i < enemyRooks.Count; i++) {
-				UpdateSlidingAttackPiece (enemyRooks[i], 0, 4);
+				UpdateSlidingAttackPiece (enemyRooks[i], 0, 4); // 车走横纵向
 			}
 
 			PieceList enemyQueens = board.queens[opponentColourIndex];
 			for (int i = 0; i < enemyQueens.Count; i++) {
-				UpdateSlidingAttackPiece (enemyQueens[i], 0, 8);
+				UpdateSlidingAttackPiece (enemyQueens[i], 0, 8); // 皇后走任意方向
 			}
 
 			PieceList enemyBishops = board.bishops[opponentColourIndex];
 			for (int i = 0; i < enemyBishops.Count; i++) {
-				UpdateSlidingAttackPiece (enemyBishops[i], 4, 8);
+				UpdateSlidingAttackPiece (enemyBishops[i], 4, 8); // 相走斜向
 			}
 		}
 
+        /// <summary>
+        /// 标记startSquare处的棋子可以走到的位置，记到opponentSlidingAttackMap中，如果在遍历过程中遇到敌方的棋子，则终止遍历
+        /// </summary>
 		void UpdateSlidingAttackPiece (int startSquare, int startDirIndex, int endDirIndex) {
 
 			for (int directionIndex = startDirIndex; directionIndex < endDirIndex; directionIndex++) {
@@ -369,33 +372,35 @@
 					opponentSlidingAttackMap |= 1ul << targetSquare;
 					if (targetSquare != friendlyKingSquare) {
 						if (targetSquarePiece != Piece.None) {
-							break;
+							break; // 当在棋盘上搜索到地方的棋子时，此遍历结束
 						}
 					}
 				}
 			}
 		}
 
-        // 计算走棋攻击数据
+        // 计算对方棋子可以攻击到的所有位点数据
 		void CalculateAttackData () {
-			GenSlidingAttackMap (); // 生成滑行攻击地图
+			GenSlidingAttackMap (); // 生成可滑行的棋子在攻击到敌方第一个棋子时所遍历的所有格子位点数据
 			// Search squares in all directions around friendly king for checks/pins by enemy sliding pieces (queen, rook, bishop)
 			int startDirIndex = 0;
 			int endDirIndex = 8;
 
+            // 根据对手是否还存在皇后 车 和相的情况，来决定搜索方向 如果存在皇后，则搜索0~8；否则check 若存在车和相，则0~8，只存在车则0~4，只存在相，则4~8，否则两者都不存在，不需要check远程攻击者
 			if (board.queens[opponentColourIndex].Count == 0) {
 				startDirIndex = (board.rooks[opponentColourIndex].Count > 0) ? 0 : 4;
 				endDirIndex = (board.bishops[opponentColourIndex].Count > 0) ? 8 : 4;
 			}
 
 			for (int dir = startDirIndex; dir < endDirIndex; dir++) {
-				bool isDiagonal = dir > 3;
+				bool isDiagonal = dir > 3; // 4~7是对角线
 
-				int n = numSquaresToEdge[friendlyKingSquare][dir];
-				int directionOffset = directionOffsets[dir];
+				int n = numSquaresToEdge[friendlyKingSquare][dir]; // 获取我方王在各个方向的格子距离棋盘边缘的距离
+				int directionOffset = directionOffsets[dir]; // 棋子的各个方向Index
 				bool isFriendlyPieceAlongRay = false;
 				ulong rayMask = 0;
 
+                // 在选取的dir方向纵深遍历每个格子
 				for (int i = 0; i < n; i++) {
 					int squareIndex = friendlyKingSquare + directionOffset * (i + 1);
 					rayMask |= 1ul << squareIndex;
@@ -404,7 +409,7 @@
 					// This square contains a piece
 					if (piece != Piece.None) {
 						if (Piece.IsColour (piece, friendlyColour)) {
-							// First friendly piece we have come across in this direction, so it might be pinned
+							// First friendly piece we have come across in this direction, so it might be pinned   https://www.chess.com/terms/pin-chess  作为王的别针棋子
 							if (!isFriendlyPieceAlongRay) {
 								isFriendlyPieceAlongRay = true;
 							}
@@ -413,7 +418,7 @@
 								break;
 							}
 						}
-						// This square contains an enemy piece
+						// This square contains an enemy piece 纵深遍历的格子上有对方的棋子，然后判断棋子
 						else {
 							int pieceType = Piece.PieceType (piece);
 
@@ -445,7 +450,7 @@
 
 			}
 
-			// Knight attacks
+			// Knight attacks 对方马能移动到的位点
 			PieceList opponentKnights = board.knights[opponentColourIndex];
 			opponentKnightAttacks = 0;
 			bool isKnightCheck = false;
@@ -462,7 +467,7 @@
 				}
 			}
 
-			// Pawn attacks
+			// Pawn attacks 对方兵能移动到的位点
 			PieceList opponentPawns = board.pawns[opponentColourIndex];
 			opponentPawnAttackMap = 0;
 			bool isPawnCheck = false;
@@ -486,6 +491,7 @@
 			opponentAttackMap = opponentAttackMapNoPawns | opponentPawnAttackMap;
 		}
 
+        // 判断给定的格子是否被攻击
 		bool SquareIsAttacked (int square) {
 			return BitBoardUtility.ContainsSquare (opponentAttackMap, square);
 		}

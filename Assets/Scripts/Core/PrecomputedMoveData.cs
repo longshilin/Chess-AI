@@ -15,8 +15,8 @@
 
 		// Stores array of indices for each square a knight can land on from any square on the board  存储某个Index的棋子可以行进的位置
 		// So for example, knightMoves[0] is equal to {10, 17}, meaning a knight on a1 can jump to c2 and b3  例如在Index为0(a1)的马，可以移动到Index为10(c2)和17(b3)的位置
-		public static readonly byte[][] knightMoves;
-		public static readonly byte[][] kingMoves;
+		public static readonly byte[][] knightMoves; // 第一维是马所在的位置序号，第二维是在该位置可以走的点的序号
+		public static readonly byte[][] kingMoves; // 第一维是王所在的位置序号，第二维是在该位置可以走的点的序号
 
 		// Pawn attack directions for white and black (NW, NE; SW SE)  兵攻击目录
 		public static readonly byte[][] pawnAttackDirections = {
@@ -102,8 +102,8 @@
 						// Ensure knight has moved max of 2 squares on x/y axis (to reject indices that have wrapped around side of board)
 						int maxCoordMoveDst = System.Math.Max (System.Math.Abs (x - knightSquareX), System.Math.Abs (y - knightSquareY));
 						if (maxCoordMoveDst == 2) {
-							legalKnightJumps.Add ((byte) knightJumpSquare);
-							knightBitboard |= 1ul << knightJumpSquare;
+							legalKnightJumps.Add ((byte) knightJumpSquare); // 如果马在Index为0这个点，那么可以走的位置是17和10
+							knightBitboard |= 1ul << knightJumpSquare; // knightBitboard也就是2的17次方+2的10次方的和132096
 						}
 					}
 				}

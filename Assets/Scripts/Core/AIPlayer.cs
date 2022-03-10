@@ -37,6 +37,7 @@
 
 		}
 
+        // 被通知轮到AI走棋
 		public override void NotifyTurnToMove () {
 
 			search.searchDiagnostics.isBook = false;

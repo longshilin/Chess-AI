@@ -77,6 +77,7 @@ namespace Chess.Game {
 
 		}
 
+        // 有效的棋子移动路径选择出来了，接着就是移动棋子，并通知对方走棋
 		void OnMoveChosen (Move move) {
 			bool animateMove = playerToMove is AIPlayer;
 			board.MakeMove (move);
@@ -180,7 +181,7 @@ namespace Chess.Game {
 
 		void NotifyPlayerToMove () {
 			gameResult = GetGameState ();
-			PrintGameResult (gameResult);
+			PrintGameResult (gameResult); // 更新gameResult的状态信息
 
 			if (gameResult == Result.Playing) {
 				playerToMove = (board.WhiteToMove) ? whitePlayer : blackPlayer;

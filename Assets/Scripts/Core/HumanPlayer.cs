@@ -131,10 +131,11 @@ namespace Chess.Game {
 			MoveGenerator moveGenerator = new MoveGenerator ();
 			bool wantsKnightPromotion = Input.GetKey (KeyCode.LeftAlt);
 
-			var legalMoves = moveGenerator.GenerateMoves (board); // 模拟生成走棋路径
+			var legalMoves = moveGenerator.GenerateMoves (board); // 生成所有可行的走棋路径
 			for (int i = 0; i < legalMoves.Count; i++) {
 				var legalMove = legalMoves[i];
 
+                // 然后在这里匹配玩家点击的棋子
 				if (legalMove.StartSquare == startIndex && legalMove.TargetSquare == targetIndex) {
 					if (legalMove.IsPromotion) {
 						if (legalMove.MoveFlag == Move.Flag.PromoteToQueen && wantsKnightPromotion) {
@@ -152,7 +153,7 @@ namespace Chess.Game {
 			}
 
 			if (moveIsLegal) {
-                // 棋子走动合法
+                // 如果能匹配得上，说明棋子走动合法
 				ChoseMove (chosenMove);
 				currentState = InputState.None;
 			} else {

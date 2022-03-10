@@ -23,7 +23,8 @@ namespace Chess.Game {
 
 		}
 
-		public void HighlightLegalMoves (Board board, Coord fromSquare) {
+        // 显示选中棋子合法的移子路径
+        public void HighlightLegalMoves (Board board, Coord fromSquare) {
 			if (showLegalMoves) {
 
 				var moves = moveGenerator.GenerateMoves (board);

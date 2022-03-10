@@ -19,8 +19,8 @@
 
 		// Stores array of indices for each square a knight can land on from any square on the board  存储某个Index的棋子可以行进的位置
 		// So for example, knightMoves[0] is equal to {10, 17}, meaning a knight on a1 can jump to c2 and b3  例如在Index为0(a1)的马，可以移动到Index为10(c2)和17(b3)的位置
-		public static readonly byte[][] knightMoves; // 第一维是马所在的位置序号，第二维是在该位置可以走的点的序号数组
-		public static readonly byte[][] kingMoves; // 第一维是王所在的位置序号，第二维是在该位置可以走的点的序号数组
+		public static readonly byte[][] knightMoves; // 一维是马所在的位置序号，二维是在该位置可以走的点的序号数组
+		public static readonly byte[][] kingMoves; // 一维是王所在的位置序号，二维是在该位置可以走的点的序号数组（0~7，共八个方向），对应的值是王在该点时对应可以走的八个方向的Index
 
 		// Pawn attack directions for white and black (NW, NE; SW SE)  兵攻击目录
 		public static readonly byte[][] pawnAttackDirections = {
@@ -124,13 +124,13 @@
 						int kingSquareX = kingMoveSquare - kingSquareY * 8;
 						// Ensure king has moved max of 1 square on x/y axis (to reject indices that have wrapped around side of board)
 						int maxCoordMoveDst = System.Math.Max (System.Math.Abs (x - kingSquareX), System.Math.Abs (y - kingSquareY));
-						if (maxCoordMoveDst == 1) {
+						if (maxCoordMoveDst == 1) { // 计算所有和国王棋子距离等于1的格子
 							legalKingMoves.Add ((byte) kingMoveSquare);
 							kingAttackBitboards[squareIndex] |= 1ul << kingMoveSquare;
 						}
 					}
 				}
-				kingMoves[squareIndex] = legalKingMoves.ToArray ();
+				kingMoves[squareIndex] = legalKingMoves.ToArray (); // 记录王所在格子对应可以走的所有点位
 
 				// Calculate legal pawn captures for white and black  计算白方和黑方兵能移动的位置
 				// https://cdn.jsdelivr.net/gh/longshilin/images/%E5%85%B5%E8%83%BD%E8%B5%B0%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%88%E5%88%86%E9%BB%91%E7%99%BD%E5%85%B5%EF%BC%89.png
@@ -169,7 +169,7 @@
 					int currentDirOffset = directionOffsets[directionIndex]; // 当前选取的方向
 					for (int n = 0; n < numSquaresToEdge[squareIndex][directionIndex]; n++) {
                         // 当前方向上纵深遍历
-						int targetSquare = squareIndex + currentDirOffset * (n + 1); // 格子地图序号+选取方向的单位间隔+ todo 这个地方n+1是什么意思？
+						int targetSquare = squareIndex + currentDirOffset * (n + 1); // 格子地图序号 + 选取方向的单位间隔 * 纵深层数
 						rookMoves[squareIndex] |= 1ul << targetSquare;
 					}
 				}

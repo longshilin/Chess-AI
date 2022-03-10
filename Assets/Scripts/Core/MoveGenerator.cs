@@ -10,7 +10,7 @@
 		public PromotionMode promotionsToGenerate = PromotionMode.All;
 
 		// ---- Instance variables ----
-		List<Move> moves;
+		List<Move> moves; // 国王的走棋
 		bool isWhiteToMove;
 		int friendlyColour; // 我方颜色
 		int opponentColour; // 对方颜色
@@ -77,11 +77,11 @@
 		}
 
 		void GenerateKingMoves () {
-			for (int i = 0; i < kingMoves[friendlyKingSquare].Length; i++) {
+			for (int i = 0; i < kingMoves[friendlyKingSquare].Length; i++) { // 遍历王在friendlyKingSquare这个格子所能走的所有格子
 				int targetSquare = kingMoves[friendlyKingSquare][i];
 				int pieceOnTargetSquare = board.Square[targetSquare];
 
-				// Skip squares occupied by friendly pieces
+				// Skip squares occupied by friendly pieces 如果这个格子被自己的棋子占据，则跳过
 				if (Piece.IsColour (pieceOnTargetSquare, friendlyColour)) {
 					continue;
 				}
@@ -392,6 +392,7 @@
 				endDirIndex = (board.bishops[opponentColourIndex].Count > 0) ? 8 : 4;
 			}
 
+            // 遍历获取我方王收到攻击威胁的数据信息
 			for (int dir = startDirIndex; dir < endDirIndex; dir++) {
 				bool isDiagonal = dir > 3; // 4~7是对角线
 
@@ -406,9 +407,9 @@
 					rayMask |= 1ul << squareIndex;
 					int piece = board.Square[squareIndex];
 
-					// This square contains a piece
+					// This square contains a piece 格子上包含棋子
 					if (piece != Piece.None) {
-						if (Piece.IsColour (piece, friendlyColour)) {
+						if (Piece.IsColour (piece, friendlyColour)) { // 我方棋子
 							// First friendly piece we have come across in this direction, so it might be pinned   https://www.chess.com/terms/pin-chess  作为王的别针棋子
 							if (!isFriendlyPieceAlongRay) {
 								isFriendlyPieceAlongRay = true;
@@ -418,11 +419,11 @@
 								break;
 							}
 						}
-						// This square contains an enemy piece 纵深遍历的格子上有对方的棋子，然后判断棋子
+						// This square contains an enemy piece 对方棋子
 						else {
 							int pieceType = Piece.PieceType (piece);
 
-							// Check if piece is in bitmask of pieces able to move in current direction
+							// Check if piece is in bitmask of pieces able to move in current direction 棋子在对角并且是相或者皇后，或 棋子不在对角并且是车或者皇后时，说明地方造成威胁
 							if (isDiagonal && Piece.IsBishopOrQueen (pieceType) || !isDiagonal && Piece.IsRookOrQueen (pieceType)) {
 								// Friendly piece blocks the check, so this is a pin
 								if (isFriendlyPieceAlongRay) {

@@ -46,18 +46,19 @@
 			Move bookMove = Move.InvalidMove;
 			if (settings.useBook && board.plyCount <= settings.maxBookPly) {
 				if (book.HasPosition (board.ZobristKey)) {
-					bookMove = book.GetRandomBookMoveWeighted (board.ZobristKey);
+					bookMove = book.GetRandomBookMoveWeighted (board.ZobristKey); // Book中包含500多中棋盘常见布局，直接按照对应的走法走就可以了
 				}
 			}
 
 			if (bookMove.IsInvalid) {
+                // 如果Book中不包含，就需要AI搜索最优解
 				if (settings.useThreading) {
 					StartThreadedSearch ();
 				} else {
 					StartSearch ();
 				}
 			} else {
-			
+			    // 如果Book中包含该棋盘布局，直接走
 				search.searchDiagnostics.isBook = true;
 				search.searchDiagnostics.moveVal = Chess.PGNCreator.NotationFromMove (FenUtility.CurrentFen(board), bookMove);
 				settings.diagnostics = search.searchDiagnostics;
